@@ -1,0 +1,67 @@
+body {
+    font-family: Arial, sans-serif;
+    color: rgb(15, 15, 15);
+    max-width: 700px;
+    
+  }
+  
+  h1 {
+    font-size: 20px;
+    border-bottom: 1px solid #000;
+  }
+  
+  h1:first-letter {
+    font-size: 30px;
+  }
+  
+  .nav-list {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
+  
+  .nav-item {
+    display: inline-block;
+  }
+  
+  .nav-item:not(:last-child) {
+    margin-right: 10px;
+  }
+  
+  .nav-link {
+    color: blue;
+  }
+  
+  .nav-link:hover {
+    color: teal;
+  }
+  
+  .nav-link:before {
+    content: "> ";
+  }
+  
+  .avatar {
+    max-width: 50vw;
+  }
+
+  .table-entry {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+  }
+
+  .todo-table {
+    max-width: 600px;
+  }
+
+  div.table-entry > div > div {
+    margin: 15px;
+    align-content: center;
+  }
+
+  .root {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+  

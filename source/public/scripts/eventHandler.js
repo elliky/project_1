@@ -1,18 +1,63 @@
-const form = document.getElementById("form");
-const title = document.getElementById("title");
-const description = document.getElementById("description");
-const importance = document.getElementById("importance");
-const duedate = document.getElementById("duedate");
+import todoService from "./todoService.js";
 
-form.addEventListener("submit", event => {
-  event.preventDefault();
+// DOM Refs
+const songsLiElement = document.querySelector("#songs");
+const loadingIndicator = document.querySelector("#loading");
 
-  const message = `
-    Title: ${title.value}
-    Description: ${description.value}
-    Importance: ${importance.value}
-    Duedate: ${duedate.value}
-  `;
+// View Rendering
+function createTodoHtml(songs) {
+  return songs
+    .map(
+      (song) => `<li>
+          <h3>${song.rating}
+              <button data-delta="1" data-song-id="${song.id}">+</button>
+              <button data-delta="-1" data-song-id="${song.id}">-</button>
+              ${song.title}
+          </h3>
+          <p>${song.artist}</p>
+      </li>`
+    )
+    .join("");
+}
 
-  alert(message);
-});
+function showLoading(shouldShow) {
+  if (shouldShow) {
+    loadingIndicator.classList.add("showing");
+  } else {
+    loadingIndicator.classList.remove("showing");
+  }
+}
+
+function renderSongs() {
+  showLoading(true);
+  songsService.getSortedSongs((songs) => {
+    songsLiElement.innerHTML = createTodoHtml(songs);
+    showLoading(false);
+  });
+}
+
+
+// controller
+function rate(id, delta) {
+  showLoading(true);
+  songsService.rateSong(id, delta, (sortedSongs) => {
+    songsLiElement.innerHTML = createTodoHtml(sortedSongs);
+    showLoading(false);
+  });
+}
+
+function bubbledClickEventHandler(event) {
+  // takes advantage of event bubbling
+  const buttonSongId = event.target.dataset.songId;
+  if (buttonSongId) {
+    event.target.disabled = true; // disable here to avoid errors when no button is clicked
+    const buttonDelta = Number(event.target.dataset.delta);
+    rate(buttonSongId, buttonDelta);
+  }
+}
+
+songsLiElement.addEventListener('click', bubbledClickEventHandler);
+
+renderSongs();
+
+
