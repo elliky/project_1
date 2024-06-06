@@ -15,14 +15,13 @@ function getRandomUUID() {
 }
 
 class TodoNote {
-    constructor(title, importance, dueDate, description, finished) {
+    constructor(title, importance, dueDate, description, finished, id) {
         this.title = title;
         this.importance = importance;
         this.dueDate = dueDate;
         this.description = description
         this.finished = finished;
-        this.id = getRandomUUID();
-        // this.id = 1;
+        this.id = id;
     }
 }
 
