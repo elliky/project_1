@@ -1,19 +1,65 @@
-import {todoNoteStore} from '../services/todo-note-store.js'
-import { SortAttribute } from './source/public/model/constants.js';
+import { todoNoteStore } from "../services/todo-note-store.js";
+import {
+  SortAttribute,
+  SortOrder,
+  FilterAttribute,
+} from "../source/public/model/constants.js";
+
+/**
+ * Array functions
+ */
+
+function compareAttribute(s1, s2, attribute, sortOrder) {
+  const order = sortOrder === SortOrder.Asc ? 1 : -1;
+  return s2[attribute.toLowerCase()] < s1[attribute.toLowerCase()]
+    ? -1 * order
+    : 1 * order;
+}
+
+function filterTodoNote(todo, filterAttribute) {
+  if (
+    filterAttribute === FilterAttribute.Finished ||
+    filterAttribute === FilterAttribute.Unfinished
+  ) {
+    const finished = filterAttribute === FilterAttribute.Finished;
+    return todo.finished === finished;
+  }
+  return true;
+}
 
 export class TodoNoteController {
+  getTodoNotes = async (req, res) => {
+    let sortAttribute = req.params.sortAttribute
+      ? req.params.sortAttribute
+      : SortAttribute.Importance;
+    let sortOrder = req.params.sortOrder
+      ? req.params.sortOrder
+      : SortOrder.Asc;
+    let filterAttribute = req.params.filterAttribute
+      ? req.params.filterAttribute
+      : null;
 
-    getTodoNotes = async (req, res) => {
-        res.json((await todoNoteStore.all()))
-    };
+    res.json(
+      (await todoNoteStore
+        .all())
+        .filter((todo) => filterTodoNote(todo, filterAttribute))
+        .sort((s1, s2) => compareAttribute(s1, s2, sortAttribute, sortOrder))
+    );
+  };
 
-    createTodoNote = async (req, res) => {
-        res.json(await todoNoteStore.add(req.body.name));
-    };
+  updateTodoNote = async (req, res) => {
+    res.json(await todoNoteStore.update(req.body.todo));
+  };
 
-    getTodoNote = async (req, res) => {
-        res.json(await todoNoteStore.get(req.params.id));
-    };
+  createTodoNote = async (req, res) => {
+    res.json(await todoNoteStore.add(req.body.name));
+  };
+
+  getTodoNote = async (req, res) => {
+    console.log(req.params.id);
+    console.log(await todoNoteStore.get(req.params.id));
+    res.json(await todoNoteStore.get(req.params.id));
+  };
 }
 
 export const todoNoteController = new TodoNoteController();

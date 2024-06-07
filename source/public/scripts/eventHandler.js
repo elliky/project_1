@@ -1,4 +1,4 @@
-import todoService from "./todoService.js";
+import todoService from "../todoService.js";
 
 // DOM Refs
 const songsLiElement = document.querySelector("#songs");

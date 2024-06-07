@@ -1,4 +1,4 @@
-import TodoService from "../todoService.js";
+import { todoService } from "../todoService.js";
 
 // Handlebar compiler
 const todoNotesTemplateCompiled = Handlebars.compile(
@@ -16,7 +16,7 @@ const todoNotesContainer = document.getElementById("todo-notes-container");
 const editTodoNoteContainer = document.getElementById("edit-todo-note-container");
 
 async function showTodoNotes() {
-  const todoNotes = await TodoService.getTodoNotes();
+  const todoNotes = await todoService.getTodoNotes();
 
   todoNotesContainer.innerHTML = todoNotesTemplateCompiled(
     { displayedTodoNotes: todoNotes },
@@ -28,7 +28,7 @@ async function showEditNote(todoNoteId) {
   let todoNote = null;
   // TODO here comes code for if id is edited
   if (todoNoteId) {
-    todoNote = await TodoService.findTodo(todoNoteId);
+    todoNote = await todoService.findTodo(todoNoteId);
   }
 
 
@@ -46,9 +46,9 @@ async function renderView() {
 function finishedClickEventHandler(event) {
   const todoNoteId = event.target.dataset.todoId;
   if (todoNoteId && event.target.name === 'finished') {
+    console.log(todoNoteId);
     event.target.setAttribute("disabled", true);
-    TodoService.toggleTodoNoteFinished(todoNoteId);
-    console.log(TodoService.getTodoNotesSimple());
+    todoService.toggleTodoNoteFinished(todoNoteId);
     event.target.removeAttribute("disabled");
   }
 }

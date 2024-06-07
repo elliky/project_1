@@ -1,3 +1,6 @@
+import TodoNote from "../model/todo-note.js";
+import { httpService } from "./http-service.js";
+
 const DELAY_MS = 200;
 
 function testUUID() {
@@ -6,7 +9,7 @@ function testUUID() {
 
 function getRandomUUID() {
   let id;
-  if (crypto && crypto.randomUUID === 'function') {
+  if (crypto && crypto.randomUUID === "function") {
     id = crypto.randomUUID;
   } else {
     id = testUUID();
@@ -14,106 +17,81 @@ function getRandomUUID() {
   return id;
 }
 
-class TodoNote {
-    constructor(title, importance, dueDate, description, finished, id) {
-        this.title = title;
-        this.importance = importance;
-        this.dueDate = dueDate;
-        this.description = description
-        this.finished = finished;
-        this.id = id;
-    }
-}
-
 const SortAttribute = {
-  Name: 'Name',
-  DueDate: 'DueDate',
-  Description: 'Description',
-  Importance: 'Importance',
-}
+  Name: "Name",
+  DueDate: "DueDate",
+  Description: "Description",
+  Importance: "Importance",
+};
 
 const SortOrder = {
-  Asc: 'Asc',
-  Desc: 'Desc'
-}
+  Asc: "Asc",
+  Desc: "Desc",
+};
 
 const FilterAttribute = {
-  Finished: 'Finished',
-  Unfinished: 'Unfinished',
-}
+  Finished: "Finished",
+  Unfinished: "Unfinished",
+};
 
 let todos = [
-    new TodoNote('testNote', 5, new Date(2024, 4, 20), "my first Testnote", false),
-    new TodoNote('testNote1', 1, new Date(2024, 4, 25), "my second Testnote", true),
-    new TodoNote('testNote2', 3, new Date(2024, 4, 27), "my third Testnote", false),
+  new TodoNote(
+    "testNote",
+    5,
+    new Date(2024, 4, 20),
+    "my first Testnote",
+    false
+  ),
+  new TodoNote(
+    "testNote1",
+    1,
+    new Date(2024, 4, 25),
+    "my second Testnote",
+    true
+  ),
+  new TodoNote(
+    "testNote2",
+    3,
+    new Date(2024, 4, 27),
+    "my third Testnote",
+    false
+  ),
 ];
 
-
-
-/**
- * Array functions
- */
-
-function compareAttribute(s1, s2, attribute, sortOrder) {
-  const order = sortOrder === SortOrder.Asc ? 1 : -1;
-  return s2[attribute.toLowerCase()] < s1[attribute.toLowerCase()] ? -1*order : 1*order;
-}
-
-function filterTodoNote(todo, filterAttribute) {
-  if (filterAttribute === FilterAttribute.Finished || filterAttribute === FilterAttribute.Unfinished) {
-    const finished = filterAttribute === FilterAttribute.Finished
-    return todo.finished === finished;
+class TodoService {
+  async createTodoNote(name) {
+    const todo = new TodoNote(
+      name,
+      5,
+      new Date(2024, 4, 20),
+      "my first Testnote",
+      false
+    );
+    return httpService.ajax("POST", "/todoNotes/", { todo });
   }
-  return true;
-}
 
+  async updateTodoNote(todo) {
+    return httpService.ajax("PUT", "/todoNotes/", { todo });
+  }
 
-/**
- * TodoNote Services
- * 
- */
+  async getTodoNotes() {
+    return httpService.ajax("GET", "/todoNotes/");
+  }
 
-async function findTodo(id) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(todos.find((todo) => id === todo.id));
-    }, DELAY_MS);
-  });
-}
+  async getTodoNote(id) {
+    return httpService.ajax("GET", `/todoNotes/${id}`);
+  }
 
-
-async function toggleTodoNoteFinished(todoNoteId) {
-  const todo = await findTodo(todoNoteId);
-  console.log(todo);
-  if (todo) {
-    todo.finished = !todo.finished;
+  async toggleTodoNoteFinished(todoNoteId) {
+    const todo = await this.getTodoNote(todoNoteId);
+    console.log(todo);
+    if (todo) {
+      console.log(todo.finished);
+      todo.finished = !todo.finished;
+    }
+    return this.updateTodoNote(todo)
   }
 }
 
-async function updateTodoNote(todoNoteId, todoNote) {
-  let todo = findTodo(todoNoteId);
-  if (todo) {
-    todo = todoNote;
-  }
-}
-
-async function getTodoNotes(sortAttribute = SortAttribute.Importance, sortOrder = SortOrder.Asc, filterAttribute = null) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve([...todos].filter((todo) => filterTodoNote(todo, filterAttribute)).sort((s1, s2) => compareAttribute(s1, s2, sortAttribute, sortOrder)));
-    }, DELAY_MS);
-  });
-}
-
-function getTodoNotesSimple(sortAttribute = SortAttribute.Importance, sortOrder = SortOrder.Asc, filterAttribute = null) {
-    return ([...todos].filter((todo) => filterTodoNote(todo, filterAttribute)).sort((s1, s2) => compareAttribute(s1, s2, sortAttribute, sortOrder)));
-}
-
-
-async function addTodoNote(todoNote) {
-  todos = [...todos, todoNote];
-}
-
-
-
-export default {toggleTodoNoteFinished, getTodoNotes, getTodoNotesSimple, findTodo, updateTodoNote, addTodoNote, SortAttribute, SortOrder, FilterAttribute};
+// export default {todoService, SortAttribute, SortOrder, FilterAttribute};
+export const todoService = new TodoService();

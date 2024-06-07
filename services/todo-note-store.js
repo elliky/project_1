@@ -12,9 +12,17 @@ export class TodoNoteStore {
         todoNoteToSave.id = crypto.randomUUID();
         return this.db.insert(todoNoteToSave);
     }
+    
+    async update(todoNote) {
+        console.log(todoNote);
+
+        // this.db.udpate didn't work as expected
+        this.db.removeOne({ id: todoNote.id });
+        return this.db.insert(todoNote);
+    }
 
     async get(id) {
-        return this.db.findOne({_id: id});
+        return this.db.findOne({id});
     }
 
     async all() {

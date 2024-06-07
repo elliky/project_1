@@ -1,4 +1,5 @@
 import express from 'express';
+import bodyParser from 'body-parser';
 
 import {todoNoteRoutes} from './routes/todo-note-routes.js';
 
@@ -7,6 +8,8 @@ import TodoNote from './source/public/model/todo-note.js'
 
 const app = express();
 const port = 3000;
+
+app.use(bodyParser.json());
 
 app.use(express.static('source/public'));
 
