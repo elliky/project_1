@@ -8,6 +8,7 @@ export class TodoNoteStore {
     }
 
     async add(todoNote) {
+        console.log('was is incoming:', todoNote);
         const todoNoteToSave = todoNote;
         todoNoteToSave.id = crypto.randomUUID();
         return this.db.insert(todoNoteToSave);

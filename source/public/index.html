@@ -9,6 +9,7 @@
       src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"
       defer
     ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/luxon/3.4.4/luxon.min.js" defer></script>
     <!-- <script src="handlebars.min.js"></script> -->
     <link rel="stylesheet" href="styles/main.css" />
     <script
@@ -54,9 +55,9 @@
           test output
           {{#each displayedTodoNotes}}
           <li class="table-entry">
-            <span>{{this}}</span>
+            <span>{{title}}</span>
             <div>
-              <div>in a day</div>
+              <div>{{hbFormatDate dueDate}}</div>
               <div id="todo-notes-finished-button">
                 <input type="checkbox" data-todo-id="{{id}}" name="finished" {{#if finished}}checked{{/if}} />
               </div>
@@ -67,7 +68,7 @@
             </div>
             <div>
               <div>{{importance}}</div>
-              <button name="edit" data-todo-id={{id}}>Edit {{id}}</button>
+              <button name="edit" data-todo-id={{id}}>Edit</button>
             </div>
           </li>
           {{/each}}
@@ -86,30 +87,26 @@
       <h2>Add new ToDo</h2>
       {{/if}}
 
-      <form id="form" action="./index.html" action="POST">
+      <form id="form" onsubmit="return false;">
+        <input id="id" type="text" name="id" value="{{todoNote.id}}" hidden />
+
         <label for="title">Title</label>
         <input id="title" type="text" name="title" required value="{{todoNote.title}}" />
 
         <br />
 
         <label for="importance">Importance</label>
-        <select name="importance" id="importance" value="{{todoNote.importance}}">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-        </select>
+        <input name="importance" type="range" min="1" max="5" id="importance" value="{{todoNote.importance}}" />
 
         <br />
 
-        <label for="duedate">Duedate</label>
-        <input id="duedate" type="date" name="duedate" value="{{todoNote.dueDate}}"/>
+        <label for="dueDate">Duedate</label>
+        <input id="dueDate" type="date" name="dueDate" value="{{todoNote.dueDate}}"/>
 
         <br />
 
         <label for="finished">Finished</label>
-        <input type="checkbox" id="finished" name="finished" value="{{todoNote.finished}}"/>
+        <input type="checkbox" id="finished" name="finished" {{#if todoNote.finished}}checked{{/if}} />
 
         <br />
 
@@ -118,7 +115,8 @@
 
         <br />
 
-        <button type="submit">Send</button>
+        <button name="saveTodoNote">Save</button>
+        <button name="saveTodoNoteOverview">Save & Overview</button>
       </form>
     </script>
   </body>

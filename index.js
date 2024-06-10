@@ -20,8 +20,8 @@ app.use((req, res, next) => {
 
 // TODO should be removed later on or only done when there is no data
 // add some dummy data
-const todoNote = new TodoNote('test', 5, new Date(), "test data1", false, null);
-todoNoteStore.add(todoNote);
+// const todoNote = new TodoNote('test', 5, new Date(), "test data1", false, null);
+// todoNoteStore.add(todoNote);
 
 app.use("/todoNotes", todoNoteRoutes);
 

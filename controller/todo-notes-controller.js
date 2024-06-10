@@ -52,7 +52,7 @@ export class TodoNoteController {
   };
 
   createTodoNote = async (req, res) => {
-    res.json(await todoNoteStore.add(req.body.name));
+    res.json(await todoNoteStore.add(req.body.todo));
   };
 
   getTodoNote = async (req, res) => {

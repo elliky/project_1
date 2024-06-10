@@ -59,14 +59,7 @@ let todos = [
 ];
 
 class TodoService {
-  async createTodoNote(name) {
-    const todo = new TodoNote(
-      name,
-      5,
-      new Date(2024, 4, 20),
-      "my first Testnote",
-      false
-    );
+  async createTodoNote(todo) {
     return httpService.ajax("POST", "/todoNotes/", { todo });
   }
 
