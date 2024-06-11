@@ -1,9 +1,11 @@
 export const SortAttribute = {
-  Name: "Name",
+  Title: "Title",
   DueDate: "DueDate",
   Description: "Description",
   Importance: "Importance",
 };
+
+export const sortAttributes = [SortAttribute.Title, SortAttribute.DueDate, SortAttribute.Description, SortAttribute.Importance];
 
 export const SortOrder = {
   Asc: "Asc",

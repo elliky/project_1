@@ -5,13 +5,19 @@ import {
   FilterAttribute,
 } from "../source/public/model/constants.js";
 
+function lowerCaseFirstLetter(str) {
+    return str.charAt(0).toLowerCase() + str.slice(1);
+}
+
+
 /**
  * Array functions
  */
 
 function compareAttribute(s1, s2, attribute, sortOrder) {
   const order = sortOrder === SortOrder.Asc ? 1 : -1;
-  return s2[attribute.toLowerCase()] < s1[attribute.toLowerCase()]
+  const attributeKey = lowerCaseFirstLetter(attribute);
+  return s2[attributeKey] < s1[attributeKey]
     ? -1 * order
     : 1 * order;
 }
@@ -29,19 +35,16 @@ function filterTodoNote(todo, filterAttribute) {
 
 export class TodoNoteController {
   getTodoNotes = async (req, res) => {
-    let sortAttribute = req.params.sortAttribute
-      ? req.params.sortAttribute
+    let sortAttribute = req.query.sortAttribute
+      ? req.query.sortAttribute
       : SortAttribute.Importance;
-    let sortOrder = req.params.sortOrder
-      ? req.params.sortOrder
-      : SortOrder.Asc;
-    let filterAttribute = req.params.filterAttribute
-      ? req.params.filterAttribute
+    let sortOrder = req.query.sortOrder ? req.query.sortOrder : SortOrder.Asc;
+    let filterAttribute = req.query.filterAttribute
+      ? req.query.filterAttribute
       : null;
 
     res.json(
-      (await todoNoteStore
-        .all())
+      (await todoNoteStore.all())
         .filter((todo) => filterTodoNote(todo, filterAttribute))
         .sort((s1, s2) => compareAttribute(s1, s2, sortAttribute, sortOrder))
     );

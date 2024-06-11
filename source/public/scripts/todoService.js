@@ -67,8 +67,13 @@ class TodoService {
     return httpService.ajax("PUT", "/todoNotes/", { todo });
   }
 
-  async getTodoNotes() {
-    return httpService.ajax("GET", "/todoNotes/");
+  async getTodoNotes(sortAttribute, sortOrder, filterAttribute) {
+    // :sortAttribute?/:sortOrder?/:filterAttribute?
+    let filterParameter = '';
+    if (filterAttribute) {
+      filterParameter = `&filterAttribute=${filterAttribute}`
+    }
+    return httpService.ajax("GET", `/todoNotes/?sortAttribute=${sortAttribute}&sortOrder=${sortOrder}${filterParameter}`);
   }
 
   async getTodoNote(id) {

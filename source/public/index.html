@@ -9,7 +9,10 @@
       src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"
       defer
     ></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/luxon/3.4.4/luxon.min.js" defer></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/luxon/3.4.4/luxon.min.js"
+      defer
+    ></script>
     <!-- <script src="handlebars.min.js"></script> -->
     <link rel="stylesheet" href="styles/main.css" />
     <script
@@ -45,11 +48,25 @@
       <input type="button" name="filter" id="filter" value="Creat new Todo" />
     </div>
     <h2>Table</h2>
+    <section class="card" id="todo-notes-buttons"></section>
     <section class="card" id="todo-notes-container"></section>
     <section class="card" id="edit-todo-note-container"></section>
 
     <!-- Note List -->
     <script id="todo-notes-template" type="text/x-handlebars-template">
+      <div id="sort-buttons">
+      <!-- if is theoretically not necessary, but still ok for the case when sortOptions are moved to backend -->
+      {{#if displayedSortButton.length}}
+        {{#each displayedSortButton}}
+        <button name="{{this}}" data-sort-attribute="{{this}}" id="{{this}}" value="By {{this}}">
+          By {{this}}
+        </button>
+        {{/each}}
+      {{else}}
+          No sort options found!
+      {{/if}}
+      </div>
+
       {{#if displayedTodoNotes.length}}
         <ul class="todo-table">
           test output
@@ -59,7 +76,7 @@
             <div>
               <div>{{hbFormatDate dueDate}}</div>
               <div id="todo-notes-finished-button">
-                <input type="checkbox" data-todo-id="{{id}}" name="finished" {{#if finished}}checked{{/if}} />
+                <input type="checkbox" data-todo-note-id="{{id}}" name="finished" {{#if finished}}checked{{/if}} />
               </div>
             </div>
             <div>
@@ -68,7 +85,7 @@
             </div>
             <div>
               <div>{{importance}}</div>
-              <button name="edit" data-todo-id={{id}}>Edit</button>
+              <button name="edit" data-todo-note-id={{id}}>Edit</button>
             </div>
           </li>
           {{/each}}
