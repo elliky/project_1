@@ -102,7 +102,6 @@ function getTodoNoteFromFormData() {
   const description = document.querySelector(
     'textarea[name="description"]'
   ).value;
-  console.log('titel', title);
 
   return new TodoNote(
     title,

@@ -1,83 +1,28 @@
-import TodoNote from "../model/todo-note.js";
 import { httpService } from "./http-service.js";
 
-const DELAY_MS = 200;
-
-function testUUID() {
-  return Date.now().toString(36) + Math.random().toString(36).substring(2);
-}
-
-function getRandomUUID() {
-  let id;
-  if (crypto && crypto.randomUUID === "function") {
-    id = crypto.randomUUID;
-  } else {
-    id = testUUID();
-  }
-  return id;
-}
-
-const SortAttribute = {
-  Name: "Name",
-  DueDate: "DueDate",
-  Description: "Description",
-  Importance: "Importance",
-};
-
-const SortOrder = {
-  Asc: "Asc",
-  Desc: "Desc",
-};
-
-const FilterAttribute = {
-  Finished: "Finished",
-  Unfinished: "Unfinished",
-};
-
-let todos = [
-  new TodoNote(
-    "testNote",
-    5,
-    new Date(2024, 4, 20),
-    "my first Testnote",
-    false
-  ),
-  new TodoNote(
-    "testNote1",
-    1,
-    new Date(2024, 4, 25),
-    "my second Testnote",
-    true
-  ),
-  new TodoNote(
-    "testNote2",
-    3,
-    new Date(2024, 4, 27),
-    "my third Testnote",
-    false
-  ),
-];
-
 class TodoService {
+  constructor(service) {
+    this.httpService = service;
+  }
+
   async createTodoNote(todo) {
-    return httpService.ajax("POST", "/todoNotes/", { todo });
+    return this.httpService.ajax("POST", "/todoNotes/", { todo });
   }
 
   async updateTodoNote(todo) {
-    return httpService.ajax("PUT", "/todoNotes/", { todo });
+    return this.httpService.ajax("PUT", "/todoNotes/", { todo });
   }
 
   async getTodoNotes(sortAttribute, sortOrder, filterAttribute) {
-    // :sortAttribute?/:sortOrder?/:filterAttribute?
     let filterParameter = '';
     if (filterAttribute) {
       filterParameter = `&filterAttribute=${filterAttribute}`
     }
-    return httpService.ajax("GET", `/todoNotes/?sortAttribute=${sortAttribute}&sortOrder=${sortOrder}${filterParameter}`);
+    return this.httpService.ajax("GET", `/todoNotes/?sortAttribute=${sortAttribute}&sortOrder=${sortOrder}${filterParameter}`);
   }
 
   async getTodoNote(id) {
-    return httpService.ajax("GET", `/todoNotes/${id}`);
+    return this.httpService.ajax("GET", `/todoNotes/${id}`);
   }
 
   async toggleTodoNoteFinished(todoNoteId) {
@@ -91,5 +36,4 @@ class TodoService {
   }
 }
 
-// export default {todoService, SortAttribute, SortOrder, FilterAttribute};
-export const todoService = new TodoService();
+export const todoService = new TodoService(httpService);

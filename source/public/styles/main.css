@@ -1,11 +1,12 @@
+
+.hidden {
+  display: none !important;
+}
+
 body {
   font-family: Arial, sans-serif;
   color: rgb(15, 15, 15);
   max-width: 700px;
-}
-
-.hidden {
-  display: none !important;
 }
 
 h1 {

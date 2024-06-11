@@ -3,11 +3,9 @@ class HttpService {
         const fetchHeaders = new Headers({'content-type': 'application/json', ...(headers || {})});
 
         return fetch(url, {
-            method: method,
+            method,
             headers: fetchHeaders, body: JSON.stringify(data)
-        }).then(x => {
-            return x.json();
-        });
+        }).then(x => x.json());
     }
 }
 
