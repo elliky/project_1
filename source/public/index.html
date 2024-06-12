@@ -25,46 +25,37 @@
   <body>
     <h1>Note App</h1>
     <div>
-      <button type="button" name="create_new" id="create_new">
+      <button type="button" name="create_new" id="create-new">
         Create new Todo
       </button>
-      <button type="button" name="toggle_style" id="toggle_style">
+      <button type="button" name="toggle_style" id="toggle-style">
         Toggle Style
       </button>
     </div>
-    <div>
-      <div>
-        <input type="button" name="name" id="name" value="Name" />
-        <button name="due-Date" id="due-Date" value="By Due Date">
-          By Due Date
-        </button>
-        <button type="button" name="creation-date" id="creation-date">
-          By Creation Date
-        </button>
-        <button type="button" name="importance" id="importance">
-          By Importance
-        </button>
-      </div>
-      <input type="button" name="filter" id="filter" value="Creat new Todo" />
-    </div>
-    <h2>Table</h2>
     <section class="card" id="todo-notes-buttons"></section>
     <section class="card" id="todo-notes-container"></section>
     <section class="card" id="edit-todo-note-container"></section>
 
     <!-- Note List -->
     <script id="todo-notes-template" type="text/x-handlebars-template">
-      <div id="sort-buttons">
-      <!-- if is theoretically not necessary, but still ok for the case when sortOptions are moved to backend -->
-      {{#if displayedSortButton.length}}
-        {{#each displayedSortButton}}
-        <button name="{{this}}" data-sort-attribute="{{this}}" id="{{this}}" value="By {{this}}">
-          By {{this}}
-        </button>
-        {{/each}}
-      {{else}}
-          No sort options found!
-      {{/if}}
+      <div>
+        <div id="sort-buttons">
+        <!-- if is theoretically not necessary, but still ok for the case when sortOptions are moved to backend -->
+        {{#if displayedSortButton.length}}
+          {{#each displayedSortButton}}
+          <button name="{{this}}" data-sort-attribute="{{this}}" id="{{this}}" value="By {{this}}">
+            By {{this}}
+          </button>
+          {{/each}}
+        {{else}}
+            No sort options found!
+        {{/if}}
+        </div>
+        <div>
+          <button name="toggleFilter" id="toggleFilter" value="toggleFilter">
+            Toggle Filter
+          </button>
+        </div>
       </div>
 
       {{#if displayedTodoNotes.length}}
@@ -140,7 +131,8 @@
         <br />
 
         <button name="saveTodoNote">Save</button>
-        <button name="saveTodoNoteOverview">Save & Overview</button>
+        <button name="saveTodoNoteOverview">Save & back to Overview</button>
+        <button name="overview">Cancel & back to Overview</button>
       </form>
     </script>
   </body>

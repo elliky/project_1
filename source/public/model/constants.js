@@ -5,7 +5,7 @@ export const SortAttribute = {
   Importance: "Importance",
 };
 
-export const sortAttributes = [SortAttribute.Title, SortAttribute.DueDate, SortAttribute.Description, SortAttribute.Importance];
+export const sortAttributes = Object.values(SortAttribute);
 
 export const SortOrder = {
   Asc: "Asc",
@@ -13,6 +13,9 @@ export const SortOrder = {
 };
 
 export const FilterAttribute = {
+  None: null,
   Finished: "Finished",
   Unfinished: "Unfinished",
 };
+
+export const filterAttribtes = Object.values(FilterAttribute);
