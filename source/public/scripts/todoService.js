@@ -1,39 +1,40 @@
-import { httpService } from "./http-service.js";
+import HttpService from "./http-service.js";
 
 class TodoService {
-  constructor(service) {
-    this.httpService = service;
+  static async createTodoNote(todo) {
+    return HttpService.ajax("POST", "/todoNotes/", { todo });
   }
 
-  async createTodoNote(todo) {
-    return this.httpService.ajax("POST", "/todoNotes/", { todo });
+  static async updateTodoNote(todo) {
+    return HttpService.ajax("PUT", "/todoNotes/", { todo });
   }
 
-  async updateTodoNote(todo) {
-    return this.httpService.ajax("PUT", "/todoNotes/", { todo });
-  }
-
-  async getTodoNotes(sortAttribute, sortOrder, filterAttribute) {
+  static async getTodoNotes(sortAttribute, sortOrder, filterAttribute) {
     let filterParameter = '';
     if (filterAttribute) {
       filterParameter = `&filterAttribute=${filterAttribute}`
     }
-    return this.httpService.ajax("GET", `/todoNotes/?sortAttribute=${sortAttribute}&sortOrder=${sortOrder}${filterParameter}`);
+    return HttpService.ajax("GET", `/todoNotes/?sortAttribute=${sortAttribute}&sortOrder=${sortOrder}${filterParameter}`);
   }
 
-  async getTodoNote(id) {
-    return this.httpService.ajax("GET", `/todoNotes/${id}`);
+  static async getTodoNote(id) {
+    return HttpService.ajax("GET", `/todoNotes/${id}`);
   }
 
+  /**
+   * This function was used to make it easier but isn't the best way to handle it in general,
+   * because the shown data in frontend could be old, so it would't behave as expected by the user
+   *
+   * @param todoNoteId id of todoNote
+   * @returns new todoNote with toggled finished attribute
+   */
   async toggleTodoNoteFinished(todoNoteId) {
     const todo = await this.getTodoNote(todoNoteId);
-    console.log(todo);
     if (todo) {
-      console.log(todo.finished);
       todo.finished = !todo.finished;
     }
     return this.updateTodoNote(todo)
   }
 }
 
-export const todoService = new TodoService(httpService);
+export default TodoService;

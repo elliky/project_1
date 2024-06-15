@@ -23,117 +23,121 @@
     <!-- <script src="scripts/todoService.js" defer></script> -->
   </head>
   <body>
-    <h1>Note App</h1>
-    <div>
-      <button type="button" name="create_new" id="create-new">
-        Create new Todo
-      </button>
-      <button type="button" name="toggle_style" id="toggle-style">
-        Toggle Style
-      </button>
-    </div>
-    <section class="card" id="todo-notes-buttons"></section>
-    <section class="card" id="todo-notes-container"></section>
-    <section class="card" id="edit-todo-note-container"></section>
-
-    <!-- Note List -->
-    <script id="todo-notes-template" type="text/x-handlebars-template">
-      <div>
-        <div id="sort-buttons">
-        <!-- if is theoretically not necessary, but still ok for the case when sortOptions are moved to backend -->
-        {{#if displayedSortButton.length}}
-          {{#each displayedSortButton}}
-          <button name="{{this}}" data-sort-attribute="{{this}}" id="{{this}}" value="By {{this}}">
-            By {{this}}
-          </button>
-          {{/each}}
-        {{else}}
-            No sort options found!
-        {{/if}}
-        </div>
-        <div>
-          <button name="toggleFilter" id="toggleFilter" value="toggleFilter">
-            Toggle Filter
-          </button>
-        </div>
+    <div class="app">
+      <div class="general-app-buttons">
+        <button type="button" name="create_new" id="create-new">
+          Create new Todo
+        </button>
+        <button type="button" name="toggle_style" id="toggle-style">
+          Toggle Style
+        </button>
       </div>
+      <section class="card" id="todo-notes-buttons"></section>
+      <section class="card" id="todo-notes-container"></section>
+      <section class="card" id="edit-todo-note-container"></section>
 
-      {{#if displayedTodoNotes.length}}
-        <ul class="todo-table">
-          test output
-          {{#each displayedTodoNotes}}
-          <li class="table-entry">
-            <span>{{title}}</span>
-            <div>
-              <div>{{hbFormatDate dueDate}}</div>
-              <div id="todo-notes-finished-button">
-                <input type="checkbox" data-todo-note-id="{{id}}" name="finished" {{#if finished}}checked{{/if}} />
+      <!-- Note List -->
+      <script id="todo-notes-template" type="text/x-handlebars-template">
+        <div class="list-control-buttons">
+          <div>
+          <!-- if is theoretically not necessary, but still ok for the case when sortOptions would be moved to backend -->
+          {{#if displayedSortButton.length}}
+            {{#each displayedSortButton}}
+            <button name="{{this}}" data-sort-attribute="{{this}}" id="{{this}}" value="By {{this}}">
+              By {{this}}
+            </button>
+            {{/each}}
+          {{else}}
+              No sort options found!
+          {{/if}}
+          </div>
+          <div>
+            <button name="toggleFilter" id="toggleFilter" value="toggleFilter">
+              Toggle Filter
+            </button>
+          </div>
+        </div>
+
+        {{#if displayedTodoNotes.length}}
+          <div>
+            <ul class="todo-list">
+              {{#each displayedTodoNotes}}
+              <li class="list-wrapper">
+                <div class="item-checkbox">
+                  <input type="checkbox" data-todo-note-id="{{id}}" name="finished" {{#if finished}}checked{{/if}} />
+                </div>
+                <div class="item-title">
+                  {{title}}
+                </div>
+                <div class="item-edit">
+                  <button name="edit" data-todo-note-id={{id}}>Edit</button>
+                </div>
+                <div class="item-description">
+                  {{description}}
+                </div>
+                <div class="item-status">
+                  <div>{{importance}}</div>
+                  <div>{{hbFormatDate dueDate}}</div>
+                </div>
+              </li>
+              {{/each}}
+            </ul>
+          </div>
+        {{else}}
+        <div>No items to show!</div>
+        {{/if}}
+      </script>
+
+      <!-- Edit Note -->
+      <script id="edit-note-template" type="text/x-handlebars-template">
+        {{#if todoNote}}
+        <h2>Edit Todo</h2>
+        {{else}}
+        <h2>Add new Todo</h2>
+        {{/if}}
+
+        <form id="form" onsubmit="return false;">
+          <div class="form-container">
+            <input id="id" type="text" name="id" value="{{todoNote.id}}" hidden />
+
+            <label for="title">* Title</label>
+            <input id="title" type="text" name="title" required value="{{todoNote.title}}" />
+
+            <label for="description">Description</label>
+            <textarea id="description" name="description">{{todoNote.description}}</textarea>
+
+            <div class="form-non-text-fields">
+              <div>
+                <label for="finished">Finished</label>
+                <input type="checkbox" id="finished" name="finished" {{#if todoNote.finished}}checked{{/if}} />
+              </div>
+              
+              <div>
+                <label for="dueDate">* Duedate</label>
+                <input id="dueDate" type="date" name="dueDate" required value="{{todoNote.dueDate}}"/>
+              </div>
+
+              <div>
+              <label for="importance">Importance</label>
+              <input name="importance" type="range" min="1" max="5" id="importance" value="{{todoNote.importance}}" list="tickmarks" />
+              <datalist id="tickmarks">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </datalist>
               </div>
             </div>
+
             <div>
-              <div>{{name}}</div>
-              <div>{{description}}</div>
+              <button id="saveTodoNote">Save</button>
+              <button id="saveTodoNoteOverview">Save & back to Overview</button>
+              <button id="overview">Cancel & back to Overview</button>
             </div>
-            <div>
-              <div>{{importance}}</div>
-              <button name="edit" data-todo-note-id={{id}}>Edit</button>
-            </div>
-          </li>
-          {{/each}}
-        </ul>
-      {{else}}
-      <div>No items to show!</div>
-      {{/if}}
-    </script>
-
-    <!-- Edit Note -->
-    <script id="edit-note-template" type="text/x-handlebars-template">
-      <h1>ToDo App</h1>
-      {{#if todoNote}}
-      <h2>Edit ToDo</h2>
-      {{else}}
-      <h2>Add new ToDo</h2>
-      {{/if}}
-
-      <form id="form" onsubmit="return false;">
-        <input id="id" type="text" name="id" value="{{todoNote.id}}" hidden />
-
-        <label for="title">Title</label>
-        <input id="title" type="text" name="title" required value="{{todoNote.title}}" />
-
-        <br />
-
-        <label for="importance">Importance</label>
-        <input name="importance" type="range" min="1" max="5" id="importance" value="{{todoNote.importance}}" list="tickmarks" />
-        <datalist id="tickmarks">
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-          <option>4</option>
-          <option>5</option>
-        </datalist>
-
-        <br />
-
-        <label for="dueDate">Duedate</label>
-        <input id="dueDate" type="date" name="dueDate" value="{{todoNote.dueDate}}"/>
-
-        <br />
-
-        <label for="finished">Finished</label>
-        <input type="checkbox" id="finished" name="finished" {{#if todoNote.finished}}checked{{/if}} />
-
-        <br />
-
-        <label for="description">Description</label>
-        <textarea id="description" name="description">{{todoNote.description}}</textarea>
-
-        <br />
-
-        <button name="saveTodoNote">Save</button>
-        <button name="saveTodoNoteOverview">Save & back to Overview</button>
-        <button name="overview">Cancel & back to Overview</button>
-      </form>
-    </script>
+          </div>
+        </form>
+      </script>
+    </div>
   </body>
 </html>

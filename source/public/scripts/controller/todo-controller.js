@@ -1,3 +1,6 @@
+// wasn't really sure how to include Handlebars and luxon in here without getting an error and without changing to npm package instead of script include
+/* eslint-disable no-undef */
+
 import {
   FilterAttribute,
   SortAttribute,
@@ -6,8 +9,8 @@ import {
   sortAttributes,
 } from "../../model/constants.js";
 import TodoNote from "../../model/todo-note.js";
-import { httpService } from "../http-service.js";
-import { todoService } from "../todoService.js";
+
+import TodoService from "../todoService.js";
 
 // State attributes
 const stateAttributes = {
@@ -30,12 +33,11 @@ Handlebars.registerHelper("hbFormatDate", (str) =>
 );
 
 // Targeted containers
-const sortButtonsContainer = document.getElementById("sort-buttons");
 const createNewButton = document.querySelector("#create-new");
 const toggleStyleButton = document.querySelector("#toggle-style");
-const todoNotesContainer = document.getElementById("todo-notes-container");
-const editTodoNoteContainer = document.getElementById(
-  "edit-todo-note-container"
+const todoNotesContainer = document.querySelector("#todo-notes-container");
+const editTodoNoteContainer = document.querySelector(
+  "#edit-todo-note-container"
 );
 
 /**
@@ -66,7 +68,7 @@ function showListView(bool) {
 }
 
 async function showTodoNotes() {
-  const todoNotes = await todoService.getTodoNotes(
+  const todoNotes = await TodoService.getTodoNotes(
     stateAttributes.sortAttribute,
     stateAttributes.sortOrder,
     stateAttributes.filterAttribute
@@ -83,10 +85,8 @@ async function showTodoNotes() {
 async function showEditNote(todoNoteId) {
   let todoNote = null;
   if (todoNoteId) {
-    todoNote = await todoService.getTodoNote(todoNoteId);
+    todoNote = await TodoService.getTodoNote(todoNoteId);
   }
-
-  console.log("todoNote before loading for edit", todoNote);
 
   editTodoNoteContainer.innerHTML = editTodoNoteTemplateCompiled(
     { todoNote },
@@ -94,17 +94,6 @@ async function showEditNote(todoNoteId) {
   );
 
   showListView(false);
-
-  // TODO wasn't able yet to add EventListener in initialize because the button's weren't there on document during init time, but should be moved
-  document
-    .querySelector('button[name="saveTodoNoteOverview"]')
-    .addEventListener("click", saveAndOverviewEventHandler);
-  document
-    .querySelector('button[name="saveTodoNote"]')
-    .addEventListener("click", saveEventHandler);
-  document
-    .querySelector('button[name="overview"]')
-    .addEventListener("click", overviewEventHandler);
 }
 
 function getTodoNoteFromFormData() {
@@ -136,7 +125,7 @@ async function finishedClickEventHandler(event) {
   const { todoNoteId } = event.target.dataset;
   if (todoNoteId && event.target.name === "finished") {
     event.target.setAttribute("disabled", true);
-    todoService.toggleTodoNoteFinished(todoNoteId);
+    TodoService.toggleTodoNoteFinished(todoNoteId);
     event.target.removeAttribute("disabled");
   }
 }
@@ -148,19 +137,36 @@ async function editClickEventHandler(event) {
   }
 }
 
+function validateTodoNoteInput(todoNote) {
+  if (
+    todoNote.title &&
+    todoNote.importance &&
+    todoNote.dueDate &&
+    luxon.DateTime.fromISO(todoNote.dueDate).isValid
+  ) {
+    return true;
+  }
+  return false;
+}
+
 async function createOrUpdateTodoNote() {
   const todoNote = getTodoNoteFromFormData();
-  console.log("test todoNote from form", todoNote);
-  if (todoNote.id) {
-    // update existing todoNote
-    return todoService.updateTodoNote(todoNote);
+
+  if (!validateTodoNoteInput(todoNote)) {
+    alert("Form Data isn't valid!");
+    return;
   }
 
-  return todoService.createTodoNote(todoNote);
+  if (todoNote.id) {
+    // update existing todoNote
+    return TodoService.updateTodoNote(todoNote);
+  }
+
+  return TodoService.createTodoNote(todoNote);
 }
 
 function handleToggleStyle() {
-  // TODO implement toggle style
+  document.body.classList.toggle("dark-mode");
 }
 
 async function handleSortButton(event) {
@@ -175,10 +181,6 @@ async function handleSortButton(event) {
       stateAttributes.sortAttribute = sortAttribute;
       stateAttributes.sortOrder = SortOrder.Asc;
     }
-    // let sortAttribute = SortAttribute.Importance;
-    // let sortOrder = SortOrder.Asc;
-    // let filterAttribute = null;
-    console.log("sortAttribute", sortAttribute);
 
     showTodoNotes();
   }
@@ -187,7 +189,6 @@ async function handleSortButton(event) {
 async function handleFilterButton(event) {
   const { id } = event.target;
   if (id === "toggleFilter") {
-    // TODO maybe we can add something to the button to tell which will be next or which is it right now
     const arrayIndex = filterAttribtes.indexOf(stateAttributes.filterAttribute);
     const nextArrayIndex =
       filterAttribtes.length > arrayIndex + 1 ? arrayIndex + 1 : 0;
@@ -197,25 +198,42 @@ async function handleFilterButton(event) {
   }
 }
 
-async function saveEventHandler() {
+async function saveEventHandler(event) {
+  if (event.target.id !== "saveTodoNote") {
+    return;
+  }
+
   // TODO this fires when form isn't complete => change
   // maybe this helps https://angelogentileiii.medium.com/using-addeventlistener-with-forms-submit-vs-click-event-listener-e07bcf35cadc
-  await createOrUpdateTodoNote();
+  const todoNote = await createOrUpdateTodoNote();
+
+  // only rerender on valid result
+  if (todoNote) {
+    // especially for new notes (to use the newly generated id) but also for cases where the backend wouldn't accept some changes we render the todoNote given from backend again
+    await showEditNote(todoNote.id);
+  }
 }
 
-async function saveAndOverviewEventHandler() {
-  // TODO this fires when form isn't complete => change
-  await createOrUpdateTodoNote();
-  await showTodoNotes();
+async function saveAndOverviewEventHandler(event) {
+  if (event.target.id !== "saveTodoNoteOverview") {
+    return;
+  }
+
+  // don't change view if update wasn't succesful or form data wasn't valid
+  if (await createOrUpdateTodoNote()) {
+    await showTodoNotes();
+  }
 }
 
-async function overviewEventHandler() {
+async function overviewEventHandler(event) {
+  if (event.target.id !== "overview") {
+    return;
+  }
+
   await showTodoNotes();
 }
 
 function initEventHandlers() {
-  // TODO entscheide welle container
-  // sortButtonsContainer.addEventListener('click', handleSortButton);
   createNewButton.addEventListener("click", () => showEditNote());
   toggleStyleButton.addEventListener("click", handleToggleStyle);
 
@@ -224,21 +242,16 @@ function initEventHandlers() {
   todoNotesContainer.addEventListener("click", finishedClickEventHandler);
   todoNotesContainer.addEventListener("click", editClickEventHandler);
 
-  // TODO wird glaub nüm brucht
-  // document.querySelector('button[name="saveTodoNoteOverview"]').addEventListener('click', saveAndOverviewEventHandler)
-  // document.querySelector('button[name="saveTodoNote"]').addEventListener('click', saveEventHandler)
+  editTodoNoteContainer.addEventListener("click", saveAndOverviewEventHandler);
+  editTodoNoteContainer.addEventListener("click", saveEventHandler);
+  editTodoNoteContainer.addEventListener("click", overviewEventHandler);
 }
 
-// initialize UI
 function initialize() {
-  // loadData();
   renderView();
   initEventHandlers();
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  console.log("start");
   initialize();
 });
-
-// initialize();
