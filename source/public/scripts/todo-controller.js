@@ -7,10 +7,10 @@ import {
   SortOrder,
   filterAttribtes,
   sortAttributes,
-} from "../../model/constants.js";
-import TodoNote from "../../model/todo-note.js";
+} from "../model/constants.js";
+import TodoNote from "../model/todo-note.js";
 
-import TodoService from "../todoService.js";
+import TodoService from "./todoService.js";
 
 // State attributes
 const stateAttributes = {

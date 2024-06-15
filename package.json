@@ -8,6 +8,7 @@
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "stylelint": "stylelint \"**/*.css\"",
+    "stylelint-fix": "stylelint --fix \"**/*.css\"",
     "eslint": "eslint \"**/*.js\"",
     "all": "npm run stylelint && npm run eslint  && node -e \"console.log('npm run all completed')\""
   },
