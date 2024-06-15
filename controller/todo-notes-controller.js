@@ -33,13 +33,13 @@ function filterTodoNote(todo, filterAttribute) {
   return true;
 }
 
-export class TodoNoteController {
-  getTodoNotes = async (req, res) => {
-    let sortAttribute = req.query.sortAttribute
+class TodoNoteController {
+  static getTodoNotes = async (req, res) => {
+    const sortAttribute = req.query.sortAttribute
       ? req.query.sortAttribute
       : SortAttribute.Importance;
-    let sortOrder = req.query.sortOrder ? req.query.sortOrder : SortOrder.Asc;
-    let filterAttribute = req.query.filterAttribute
+    const sortOrder = req.query.sortOrder ? req.query.sortOrder : SortOrder.Asc;
+    const filterAttribute = req.query.filterAttribute
       ? req.query.filterAttribute
       : null;
 
@@ -50,19 +50,17 @@ export class TodoNoteController {
     );
   };
 
-  updateTodoNote = async (req, res) => {
+  static updateTodoNote = async (req, res) => {
     res.json(await todoNoteStore.update(req.body.todo));
   };
 
-  createTodoNote = async (req, res) => {
+  static createTodoNote = async (req, res) => {
     res.json(await todoNoteStore.add(req.body.todo));
   };
 
-  getTodoNote = async (req, res) => {
-    console.log(req.params.id);
-    console.log(await todoNoteStore.get(req.params.id));
+  static getTodoNote = async (req, res) => {
     res.json(await todoNoteStore.get(req.params.id));
   };
 }
 
-export const todoNoteController = new TodoNoteController();
+export default TodoNoteController;

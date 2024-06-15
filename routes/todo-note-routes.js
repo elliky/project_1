@@ -1,12 +1,12 @@
 import express from 'express';
 
-import {todoNoteController} from '../controller/todo-notes-controller.js';
+import TodoNoteController from '../controller/todo-notes-controller.js';
 
-const router = express.Router();
+const todoNoteRoutes = express.Router();
 
-router.get("/", todoNoteController.getTodoNotes);
-router.post("/", todoNoteController.createTodoNote);
-router.put("/", todoNoteController.updateTodoNote)
-router.get("/:id/", todoNoteController.getTodoNote);
+todoNoteRoutes.get("/", TodoNoteController.getTodoNotes);
+todoNoteRoutes.post("/", TodoNoteController.createTodoNote);
+todoNoteRoutes.put("/", TodoNoteController.updateTodoNote)
+todoNoteRoutes.get("/:id/", TodoNoteController.getTodoNote);
 
-export const todoNoteRoutes = router;
+export default todoNoteRoutes; 

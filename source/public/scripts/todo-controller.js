@@ -1,4 +1,4 @@
-// wasn't really sure how to include Handlebars and luxon in here without getting an error and without changing to npm package instead of script include
+// didn't know how to include Handlebars and luxon in here without getting an error and without changing to npm package instead of script include in the html
 /* eslint-disable no-undef */
 
 import {
@@ -154,7 +154,7 @@ async function createOrUpdateTodoNote() {
 
   if (!validateTodoNoteInput(todoNote)) {
     alert("Form Data isn't valid!");
-    return;
+    return undefined;
   }
 
   if (todoNote.id) {

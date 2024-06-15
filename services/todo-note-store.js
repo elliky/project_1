@@ -1,5 +1,4 @@
 import Datastore from 'nedb-promises'
-// import TodoNote from '../source/public/model/todo-note.js'
 
 export class TodoNoteStore {
     constructor(db) {

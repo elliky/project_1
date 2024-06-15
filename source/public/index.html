@@ -13,14 +13,14 @@
       src="https://cdnjs.cloudflare.com/ajax/libs/luxon/3.4.4/luxon.min.js"
       defer
     ></script>
-    <!-- <script src="handlebars.min.js"></script> -->
+    <!-- this is to prevent an warning in firefox about style sheet -->
+    <script>0</script>
     <link rel="stylesheet" href="styles/main.css" />
     <script
       src="scripts/todo-controller.js"
       type="module"
       defer
     ></script>
-    <!-- <script src="scripts/todoService.js" defer></script> -->
   </head>
   <body>
     <div class="app">
@@ -64,7 +64,9 @@
               {{#each displayedTodoNotes}}
               <li class="list-wrapper">
                 <div class="item-checkbox">
-                  <input type="checkbox" data-todo-note-id="{{id}}" name="finished" {{#if finished}}checked{{/if}} />
+                  <!-- this label is only for accessibility -->
+                  <label for="finished-{{id}}" hidden>Finished</label>
+                  <input type="checkbox" data-todo-note-id="{{id}}" id="finished-{{id}}" name="finished" {{#if finished}}checked{{/if}} />
                 </div>
                 <div class="item-title">
                   {{title}}

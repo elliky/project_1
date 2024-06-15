@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 
-import {todoNoteRoutes} from './routes/todo-note-routes.js';
+import todoNoteRoutes from './routes/todo-note-routes.js';
 
 const app = express();
 const port = 3000;
