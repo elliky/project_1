@@ -8,6 +8,11 @@
   gap: 2rem;
 }
 
+.large-info-message {
+  text-align: center;
+  margin: 2rem 0;
+}
+
 /* grid definitons */
 
 .list-wrapper {
@@ -40,7 +45,7 @@
 }
 
 .todo-list {
-  max-width: 550px;
+  padding: 0;
 }
 
 body {
@@ -121,11 +126,6 @@ li:not(:last-child) {
   margin-bottom: 5px;
 }
 
-ul {
-  display: flex;
-  flex-direction: column;
-}
-
 /* Styles for form */
 
 textarea {
@@ -144,4 +144,12 @@ textarea {
   align-content: center;
   justify-content: space-between;
   align-items: baseline;
+}
+
+input:invalid {
+  box-shadow: 0 0 3px 1px red;
+}
+
+input:focus:invalid {
+  box-shadow: none;
 }

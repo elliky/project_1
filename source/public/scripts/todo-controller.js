@@ -125,9 +125,12 @@ async function finishedClickEventHandler(event) {
   const { todoNoteId } = event.target.dataset;
   if (todoNoteId && event.target.name === "finished") {
     event.target.setAttribute("disabled", true);
-    TodoService.toggleTodoNoteFinished(todoNoteId);
+    await TodoService.toggleTodoNoteFinished(todoNoteId);
     event.target.removeAttribute("disabled");
   }
+
+  // refresh the todoNote list in case there is a filter applied
+  showTodoNotes();
 }
 
 async function editClickEventHandler(event) {

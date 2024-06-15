@@ -28,7 +28,7 @@ class TodoService {
    * @param todoNoteId id of todoNote
    * @returns new todoNote with toggled finished attribute
    */
-  async toggleTodoNoteFinished(todoNoteId) {
+  static async toggleTodoNoteFinished(todoNoteId) {
     const todo = await this.getTodoNote(todoNoteId);
     if (todo) {
       todo.finished = !todo.finished;
