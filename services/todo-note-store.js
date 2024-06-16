@@ -1,5 +1,6 @@
 import Datastore from 'nedb-promises'
 
+// nedb generates a _id which isn't used but that doesn't really matter.
 export class TodoNoteStore {
     constructor(db) {
         const options = {filename: './data/orders.db', autoload: true};
@@ -13,7 +14,7 @@ export class TodoNoteStore {
     }
     
     async update(todoNote) {
-        // this.db.udpate didn't work as expected
+        // db.update would be cleaner, but it's a lot easier this way
         this.db.removeOne({ id: todoNote.id });
         return this.db.insert(todoNote);
     }
