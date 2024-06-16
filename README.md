@@ -1,8 +1,7 @@
 # project_1
 
 ## Project comments
-This project doesn't include error proper error handling.
-
+This project doesn't include proper error handling and there is no loading indicator for a slow server or connection.
 
 ## Commands
 
