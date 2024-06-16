@@ -63,6 +63,8 @@ button {
   color: #dfdfe8;
 }
 
+/* Styles for form */
+
 .slider {
   opacity: 0.6;
 }
@@ -78,8 +80,6 @@ button {
 .checkbox:hover {
   opacity: 1;
 }
-
-/* Styles for form */
 
 textarea {
   height: 10rem;
@@ -107,7 +107,7 @@ input:focus:invalid {
   box-shadow: none;
 }
 
-/* list try new definition */
+/* todo note list styling */
 
 .list-entry {
   display: flex;

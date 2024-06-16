@@ -28,6 +28,7 @@ const editTodoNoteTemplateCompiled = Handlebars.compile(
   document.getElementById("edit-note-template").innerHTML
 );
 
+// Handlebar helpers
 Handlebars.registerHelper("hbFormatDate", (dueDate) =>
   // luxon.Interval.fromDateTimes(luxon.DateTime.fromISO(str), luxon.DateTime.now()).length('days')
   luxon.DateTime.fromISO(dueDate).toRelativeCalendar()
@@ -36,19 +37,23 @@ Handlebars.registerHelper("hbFormatDate", (dueDate) =>
 function getDueDateStyleFromDateTimes(dueDate) {
   const dateTimeDueDate = luxon.DateTime.fromISO(dueDate);
   const dateTimeNow = luxon.DateTime.now();
-  let diff = luxon.Interval.fromDateTimes(dateTimeDueDate, dateTimeNow).length('days')
+  let diff = luxon.Interval.fromDateTimes(dateTimeDueDate, dateTimeNow).length(
+    "days"
+  );
   // if luxon gives back NaN it's negative => the dueDate is in the future
   if (Number.isNaN(diff)) {
-    diff = luxon.Interval.fromDateTimes(dateTimeNow, dateTimeDueDate).length('days')
+    diff = luxon.Interval.fromDateTimes(dateTimeNow, dateTimeDueDate).length(
+      "days"
+    );
     if (diff <= 5) {
-      return 'list-due-date-soon';
+      return "list-due-date-soon";
     }
-    return 'list-due-date-sufficient';
+    return "list-due-date-sufficient";
   }
   if (diff < 1) {
-    return 'list-due-date-today';
+    return "list-due-date-today";
   }
-  return 'list-due-date-missed';
+  return "list-due-date-missed";
 }
 
 Handlebars.registerHelper("hbDueDateStyle", (dueDate) =>
@@ -141,7 +146,6 @@ function getTodoNoteFromFormData() {
 
 async function renderView() {
   await showTodoNotes();
-  // await showEditNote();
 }
 
 async function finishedClickEventHandler(event) {
@@ -228,11 +232,9 @@ async function saveEventHandler(event) {
     return;
   }
 
-  // TODO this fires when form isn't complete => change
-  // maybe this helps https://angelogentileiii.medium.com/using-addeventlistener-with-forms-submit-vs-click-event-listener-e07bcf35cadc
   const todoNote = await createOrUpdateTodoNote();
 
-  // only rerender on valid result
+  // only rerender on valid create or udpate
   if (todoNote) {
     // especially for new notes (to use the newly generated id) but also for cases where the backend wouldn't accept some changes we render the todoNote given from backend again
     await showEditNote(todoNote.id);
