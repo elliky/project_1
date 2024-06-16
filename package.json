@@ -2,7 +2,6 @@
   "name": "cas-fee-projekt-1-starter-template",
   "version": "1.0.0",
   "description": "Testat template",
-  "main": "public/scripts/main.js",
   "type": "module",
   "scripts": {
     "start": "node index.js",

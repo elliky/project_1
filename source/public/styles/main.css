@@ -2,52 +2,6 @@
   display: none !important;
 }
 
-.list-item {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-}
-
-.large-info-message {
-  text-align: center;
-  margin: 2rem 0;
-}
-
-/* grid definitons */
-
-.list-wrapper {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-  grid-template-areas:
-    ". title . status status edit"
-    "checkbox desc desc desc desc desc"
-    ". desc desc desc desc desc";
-}
-
-.item-checkbox {
-  grid-area: checkbox;
-}
-
-.item-title {
-  grid-area: title;
-}
-
-.item-edit {
-  grid-area: edit;
-}
-
-.item-description {
-  grid-area: desc;
-}
-
-.item-status {
-  grid-area: status;
-}
-
-.todo-list {
-  padding: 0;
-}
-
 body {
   background: whitesmoke;
   font-family: Arial, sans-serif;
@@ -55,16 +9,9 @@ body {
   color: #33333b;
   margin: 0 auto;
 
-  --btn-bg-color: #a7a7b5;
+  --btn-bg-color: #babaff;
+  --btn-list-bg-color: #bad8ff;
   --btn-text-color: rgb(15 15 15);
-  --text-color: hsl(0deg 0% 85%);
-  --background-color: hsl(0deg 0% 16%);
-  --line-color: hsl(0deg 0% 40%);
-  --toolbar-btn-color: ghostwhite;
-  --toolbar-btn-background: hsl(0deg 0% 23%);
-  --toolbar-btn-hover-color: hsl(0deg 0% 31%);
-  --input-background-color: hsl(0deg 0% 13%);
-  --input-text-color: white;
 }
 
 .dark-mode {
@@ -72,8 +19,14 @@ body {
   background: linear-gradient(90deg, rgb(0 0 0 / 100%) 0%, rgb(0 0 0 / 79.3%) 50%, rgb(0 0 0 / 100%) 100%);
   color: #dfdfe8;
 
-  --btn-bg-color: #243c52;
+  --btn-bg-color: #455f77;
+  --btn-list-bg-color: #454a77;
   --btn-text-color: whitesmoke;
+}
+
+.large-info-message {
+  text-align: center;
+  margin: 2rem 0;
 }
 
 button {
@@ -110,20 +63,20 @@ button {
   color: #dfdfe8;
 }
 
-li:not(:last-child) {
-  margin-bottom: 1rem;
+.slider {
+  opacity: 0.6;
 }
 
-.list-item-without-checkbox {
-  display: flex;
-  flex-direction: column;
+.slider:hover {
+  opacity: 1;
 }
 
-.list-title-and-edit {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 5px;
+.checkbox {
+  opacity: 0.6;
+}
+
+.checkbox:hover {
+  opacity: 1;
 }
 
 /* Styles for form */
@@ -152,4 +105,118 @@ input:invalid {
 
 input:focus:invalid {
   box-shadow: none;
+}
+
+/* list try new definition */
+
+.list-entry {
+  display: flex;
+}
+
+.list-section-checkbox {
+  flex: 0 0 10%;
+  display: flex;
+}
+
+.list-section-text {
+  flex: 0 0 75%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.list-section-status-edit {
+  flex: 0 0 15%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.list-section-title {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.list-title {
+  font-size: 1.17em;
+  font-weight: bold;
+}
+
+.list-description {
+  letter-spacing: -1px;
+}
+
+.list-due-date {
+  padding: 0.1rem 0.2rem;
+  border-radius: 7px;
+}
+
+.list-due-date-sufficient {
+  background-color: #4ab40477;
+}
+
+.list-due-date-soon {
+  background-color: #c4a418a6;
+}
+
+.list-due-date-today {
+  background-color: #b47604be;
+}
+
+.list-due-date-missed {
+  background-color: #be2f0377;
+}
+
+.todo-list {
+  padding: 0;
+}
+
+.todo-list button {
+  background-color: var(--btn-list-bg-color);
+}
+
+/* ul li styling */
+
+ul {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+}
+
+ul li {
+  padding: 0.5em 0;
+  border-bottom: 1px solid #ccccccc0;
+}
+
+li:not(:last-child) {
+  margin-bottom: 0.5rem;
+}
+
+/* importance styling */
+
+.list-importance {
+  padding: 0.1rem 0.2rem;
+  border-radius: 7px;
+}
+
+.list-importance-1 {
+  background-color: #a6ff0093;
+}
+
+.list-importance-2 {
+  background-color: #fbff0098;
+}
+
+.list-importance-3 {
+  background-color: #ffae009a;
+}
+
+.list-importance-4 {
+  background-color: #ff48007a;
+}
+
+.list-importance-5 {
+  background-color: #ff00007a;
 }

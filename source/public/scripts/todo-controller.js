@@ -28,8 +28,31 @@ const editTodoNoteTemplateCompiled = Handlebars.compile(
   document.getElementById("edit-note-template").innerHTML
 );
 
-Handlebars.registerHelper("hbFormatDate", (str) =>
-  luxon.DateTime.fromISO(str).toRelativeCalendar()
+Handlebars.registerHelper("hbFormatDate", (dueDate) =>
+  // luxon.Interval.fromDateTimes(luxon.DateTime.fromISO(str), luxon.DateTime.now()).length('days')
+  luxon.DateTime.fromISO(dueDate).toRelativeCalendar()
+);
+
+function getDueDateStyleFromDateTimes(dueDate) {
+  const dateTimeDueDate = luxon.DateTime.fromISO(dueDate);
+  const dateTimeNow = luxon.DateTime.now();
+  let diff = luxon.Interval.fromDateTimes(dateTimeDueDate, dateTimeNow).length('days')
+  // if luxon gives back NaN it's negative => the dueDate is in the future
+  if (Number.isNaN(diff)) {
+    diff = luxon.Interval.fromDateTimes(dateTimeNow, dateTimeDueDate).length('days')
+    if (diff <= 5) {
+      return 'list-due-date-soon';
+    }
+    return 'list-due-date-sufficient';
+  }
+  if (diff < 1) {
+    return 'list-due-date-today';
+  }
+  return 'list-due-date-missed';
+}
+
+Handlebars.registerHelper("hbDueDateStyle", (dueDate) =>
+  getDueDateStyleFromDateTimes(dueDate)
 );
 
 // Targeted containers
@@ -156,7 +179,6 @@ async function createOrUpdateTodoNote() {
   const todoNote = getTodoNoteFromFormData();
 
   if (!validateTodoNoteInput(todoNote)) {
-    alert("Form Data isn't valid!");
     return undefined;
   }
 

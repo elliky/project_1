@@ -1,8 +1,8 @@
 export const SortAttribute = {
-  Title: "Title",
   DueDate: "DueDate",
-  Description: "Description",
   Importance: "Importance",
+  Title: "Title",
+  Description: "Description",
 };
 
 export const sortAttributes = Object.values(SortAttribute);

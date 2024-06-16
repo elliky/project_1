@@ -62,24 +62,28 @@
           <div>
             <ul class="todo-list">
               {{#each displayedTodoNotes}}
-              <li class="list-wrapper">
-                <div class="item-checkbox">
+              <li class="list-entry">
+                <div class="list-section-checkbox">
                   <!-- this label is only for accessibility -->
                   <label for="finished-{{id}}" hidden>Finished</label>
-                  <input type="checkbox" data-todo-note-id="{{id}}" id="finished-{{id}}" name="finished" {{#if finished}}checked{{/if}} />
+                  <input class="checkbox" type="checkbox" data-todo-note-id="{{id}}" id="finished-{{id}}" name="finished" {{#if finished}}checked{{/if}} />
                 </div>
-                <div class="item-title">
-                  {{title}}
+                <div class="list-section-text">
+                  <div class="list-section-title">
+                    <div class="list-importance list-importance-{{importance}}">{{importance}}</div>
+                    <div class="list-title">
+                      {{title}}
+                    </div>
+                  </div>
+                  <div class="list-description">
+                    {{description}}
+                  </div>
                 </div>
-                <div class="item-edit">
-                  <button name="edit" data-todo-note-id={{id}}>Edit</button>
-                </div>
-                <div class="item-description">
-                  {{description}}
-                </div>
-                <div class="item-status">
-                  <div>{{importance}}</div>
-                  <div>{{hbFormatDate dueDate}}</div>
+                <div class="list-section-status-edit">
+                  <div class="list-due-date {{hbDueDateStyle dueDate}}">{{hbFormatDate dueDate}}</div>
+                  <div>
+                    <button name="edit" data-todo-note-id={{id}}>Edit</button>
+                  </div>
                 </div>
               </li>
               {{/each}}
@@ -111,7 +115,7 @@
             <div class="form-non-text-fields">
               <div>
                 <label for="finished">Finished</label>
-                <input type="checkbox" id="finished" name="finished" {{#if todoNote.finished}}checked{{/if}} />
+                <input class="checkbox" type="checkbox" id="finished" name="finished" {{#if todoNote.finished}}checked{{/if}} />
               </div>
               
               <div>
@@ -121,7 +125,7 @@
 
               <div>
               <label for="importance">Importance</label>
-              <input name="importance" type="range" min="1" max="5" id="importance" value="{{todoNote.importance}}" list="tickmarks" />
+              <input class="slider" name="importance" type="range" min="1" max="5" id="importance" value="{{todoNote.importance}}" list="tickmarks" />
               <datalist id="tickmarks">
                 <option>1</option>
                 <option>2</option>
